@@ -68,3 +68,7 @@ This project has been developed using TDD approach. It has 36 test cases include
 ```commandline
 docker-compose run app sh -c "python manage.py test && flake8"
 ```
+If you are running the code locally, then instead of the above docker command, you should use
+```commandline
+python manage.py test && flake8
+```
