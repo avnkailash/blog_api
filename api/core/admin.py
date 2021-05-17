@@ -24,7 +24,17 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+class CommentInlineAdmin(admin.TabularInline):
+    model = models.Comment
+
+
+class PostAdmin(admin.ModelAdmin):
+    inlines = [
+        CommentInlineAdmin,
+    ]
+
+
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Tag)
-admin.site.register(models.Post)
+admin.site.register(models.Post, PostAdmin)
 admin.site.register(models.Comment)

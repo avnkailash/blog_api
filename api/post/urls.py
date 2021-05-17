@@ -6,6 +6,7 @@ from post import views
 router = DefaultRouter()
 router.register('tags', views.TagViewSet)
 router.register('posts', views.PostViewSet)
+router.register('comments', views.CommentViewSet)
 
 app_name = 'post'
 

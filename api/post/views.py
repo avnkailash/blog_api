@@ -4,7 +4,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Tag, Post
+from core.models import Tag, Post, Comment
 from post import serializers
 
 
@@ -50,13 +50,19 @@ class PostViewSet(viewsets.ModelViewSet):
         return [int(str_id) for str_id in qs.split(',')]
 
     def get_queryset(self):
-        """Retrieve the recipes for the authenticated user"""
+        """Retrieve the posts for the authenticated user"""
         tags = self.request.query_params.get('tags')
+        comments = self.request.query_params.get('comments')
+
         queryset = self.queryset
 
         if tags:
             tag_ids = self._params_to_ints(tags)
             queryset = queryset.filter(tags__id__in=tag_ids)
+
+        if comments:
+            comments_ids = self._params_to_ints(comments)
+            queryset = queryset.filter(comments__id__in=comments_ids)
 
         return queryset.filter(user=self.request.user)
 
@@ -92,3 +98,31 @@ class PostViewSet(viewsets.ModelViewSet):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """ViewSet for blog post comments"""
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = Comment.objects.all()
+    serializer_class = serializers.CommentSerializer
+
+    def get_queryset(self):
+        """Return objects for the current authenticated user only!"""
+        return self.queryset.filter(
+            user=self.request.user
+        ).order_by('-created_on')
+
+    def _params_to_ints(self, qs):
+        """Convert a list of string IDs to integers"""
+        return [int(str_id) for str_id in qs.split(',')]
+
+    def get_serializer_class(self):
+        """Return appropriate serializer class"""
+        if self.action == 'retrieve':
+            return serializers.CommentDetailSerializer
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Create a new blog post"""
+        serializer.save(user=self.request.user)
