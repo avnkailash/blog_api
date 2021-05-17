@@ -198,54 +198,54 @@ class PrivatePostAPITests(TestCase):
         tags = post.tags.all()
         self.assertEqual(len(tags), 0)
 
-#
-# class PostImageUploadTests(TestCase):
-#
-#     def setUp(self):
-#         self.client = APIClient()
-#         self.user = get_user_model().objects.create_user(
-#             'user@test.com',
-#             'Test123'
-#         )
-#         self.client.force_authenticate(self.user)
-#         self.post = sample_post(user=self.user)
-#
-#     def tearDown(self):
-#         """
-#         We have to delete the created dummy images to ensure
-#         we are maintaining the system state correctly after
-#         the test execution.
-#         :return: None
-#         """
-#         self.post.image.delete()
-#
-#     def test_uploading_valid_image(self):
-#         """
-#         Test Uploading a valid image file
-#         """
-#         url = image_upload_url(self.post.id)
-#         with tempfile.NamedTemporaryFile(suffix='.jpg') as ntf:
-#             img = Image.new('RGB', (10, 10))
-#             img.save(ntf, format='JPEG')
-#             ntf.seek(0)
-#             res = self.client.post(url, {'image': ntf}, format='multipart')
-#
-#         self.post.refresh_from_db()
-#         self.assertEqual(res.status_code, status.HTTP_200_OK)
-#         self.assertIn('image', res.data)
-#         self.assertTrue(os.path.exists(self.post.image.path))
-#
-#     def test_uploading_invalid_image(self):
-#         """
-#         Test uploading an invalid image file
-#         """
-#         url = image_upload_url(self.post.id)
-#         res = self.client.post(url,
-#                                {'image': 'notanimage'},
-#                                format='multipart'
-#                                )
-#
-#         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+class PostImageUploadTests(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            'user@test.com',
+            'Test123'
+        )
+        self.client.force_authenticate(self.user)
+        self.post = sample_post(user=self.user)
+
+    def tearDown(self):
+        """
+        We have to delete the created dummy images to ensure
+        we are maintaining the system state correctly after
+        the test execution.
+        :return: None
+        """
+        self.post.image.delete()
+
+    def test_uploading_valid_image(self):
+        """
+        Test Uploading a valid image file
+        """
+        url = image_upload_url(self.post.id)
+        with tempfile.NamedTemporaryFile(suffix='.jpg') as ntf:
+            img = Image.new('RGB', (10, 10))
+            img.save(ntf, format='JPEG')
+            ntf.seek(0)
+            res = self.client.post(url, {'image': ntf}, format='multipart')
+
+        self.post.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('image', res.data)
+        self.assertTrue(os.path.exists(self.post.image.path))
+
+    def test_uploading_invalid_image(self):
+        """
+        Test uploading an invalid image file
+        """
+        url = image_upload_url(self.post.id)
+        res = self.client.post(url,
+                               {'image': 'notanimage'},
+                               format='multipart'
+                               )
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestPostFilteringAPI(TestCase):
