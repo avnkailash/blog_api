@@ -141,7 +141,7 @@ class PrivatePostAPITests(TestCase):
         for key in payload.keys():
             self.assertEqual(payload[key], getattr(post, key))
 
-    def test_create_recipe_with_tags(self):
+    def test_create_post_with_tags(self):
         """
         Test the creation of a post with tags
         """
@@ -257,7 +257,7 @@ class TestPostFilteringAPI(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def test_filter_recipes_by_tags(self):
+    def test_filter_posts_by_tags(self):
         """Test returning posts with specific tags"""
         post1 = sample_post(user=self.user, title='Blog Post 01')
         post2 = sample_post(user=self.user, title='Blog Post 02')

@@ -12,7 +12,7 @@ def post_image_file_path(instance, filename):
     ext = filename.split(".")[-1]
     filename = f'{uuid.uuid4()}.{ext}'
 
-    return os.path.join('uploads/recipe/', filename)
+    return os.path.join('uploads/post/', filename)
 
 
 class UserManager(BaseUserManager):
@@ -88,7 +88,7 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
-    """Recipe object"""
+    """Post object"""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
