@@ -72,3 +72,11 @@ If you are running the code locally, then instead of the above docker command, y
 ```commandline
 python manage.py test && flake8
 ```
+
+### Important
+If you wish to run the project locally, do not forget to create the required directories in the `/vol`
+```commandline
+/vol/web/media
+/vol/web/media
+```
+these two directories are required to be able to upload images. And also, the current user needs to have proper read-write-execute permissions to the /vol and its sub-directories.
